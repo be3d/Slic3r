@@ -29,6 +29,7 @@
     void align_to_origin();
     void rotate(double angle, Point* center);
     TriangleMeshPtrs split();
+    TriangleMeshPtrs split_by_extruder();
     void merge(TriangleMesh* mesh)
         %code{% THIS->merge(*mesh); %};
     ExPolygons horizontal_projection();
@@ -37,6 +38,8 @@
     Clone<Pointf3> center()
         %code{% RETVAL = THIS->bounding_box().center(); %};
     int facets_count();
+    int extruders_count();
+    int extruder_num();
     void reset_repair_stats();
 %{
 
@@ -54,6 +57,8 @@ TriangleMesh::stats()
         (void)hv_stores( hv, "facets_reversed",     newSViv(THIS->stl.stats.facets_reversed) );
         (void)hv_stores( hv, "backwards_edges",     newSViv(THIS->stl.stats.backwards_edges) );
         (void)hv_stores( hv, "normals_fixed",       newSViv(THIS->stl.stats.normals_fixed) );
+        (void)hv_stores( hv, "number_of_extruders", newSViv(THIS->stl.stats.number_of_extruders));
+        (void)hv_stores( hv, "extruder_number",     newSViv(THIS->stl.stats.extruder_number));
         RETVAL = (SV*)newRV_noinc((SV*)hv);
     OUTPUT:
         RETVAL

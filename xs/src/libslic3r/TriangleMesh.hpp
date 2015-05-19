@@ -43,6 +43,7 @@ class TriangleMesh
     void align_to_origin();
     void rotate(double angle, Point* center);
     TriangleMeshPtrs split() const;
+    TriangleMeshPtrs split_by_extruder() const;
     void merge(const TriangleMesh &mesh);
     ExPolygons horizontal_projection() const;
     Polygon convex_hull();
@@ -50,6 +51,8 @@ class TriangleMesh
     void reset_repair_stats();
     bool needed_repair() const;
     size_t facets_count() const;
+    int extruders_count() const;
+    int extruder_num() const;
     stl_file stl;
     bool repaired;
     

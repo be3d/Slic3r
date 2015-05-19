@@ -57,6 +57,8 @@ stl_initialize(stl_file *stl) {
   stl->stats.number_of_facets = 0;
   stl->stats.facets_malloced = 0;
   stl->stats.volume = -1.0;
+  stl->stats.number_of_extruders = 0;
+  stl->stats.extruder_number = 0;
 
   stl->neighbors_start = NULL;
   stl->facet_start = NULL;
@@ -263,6 +265,8 @@ void
 stl_read(stl_file *stl, int first_facet, int first) {
   stl_facet facet;
   int   i;
+  short ext_num = -1;
+  short extruder_map = 0;
 
   if (stl->error) return;
 
@@ -283,6 +287,13 @@ stl_read(stl_file *stl, int first_facet, int first) {
         perror("Cannot read facet");
         stl->error = 1;
         return;
+      }
+
+      ext_num = (facet.extra[1] << 8) + facet.extra[0];
+
+      if ((extruder_map & (1 << ext_num)) == 0) {
+        extruder_map += (1 << ext_num);
+        stl->stats.number_of_extruders++;
       }
     } else
       /* Read a single facet from an ASCII .STL file */

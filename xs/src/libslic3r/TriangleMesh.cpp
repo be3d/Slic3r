@@ -172,6 +172,18 @@ TriangleMesh::facets_count() const
     return this->stl.stats.number_of_facets;
 }
 
+int
+TriangleMesh::extruders_count() const
+{
+    return this->stl.stats.number_of_extruders;
+}
+
+int
+TriangleMesh::extruder_num() const
+{
+    return this->stl.stats.extruder_number;
+}
+
 void
 TriangleMesh::WriteOBJFile(char* output_file) {
     stl_generate_shared_vertices(&stl);
@@ -323,6 +335,56 @@ TriangleMesh::split() const
         }
     }
     
+    return meshes;
+}
+
+TriangleMeshPtrs
+TriangleMesh::split_by_extruder() const
+{
+    TriangleMeshPtrs meshes;
+    int facets_by_ext[16] = {0};
+    int ext_index_map[16] = {0};
+
+    int ext_num;
+    stl_facet facet;
+    
+    for(int idx = 0; idx < this->stl.stats.number_of_facets; idx++) {
+        facet = this->stl.facet_start[idx];
+        ext_num = (facet.extra[1] << 8) + facet.extra[0];
+        if (ext_num > 16) ext_num = 0;
+        facets_by_ext[ext_num]++;
+    }
+
+    for(int i = 0; i < 16; i++) {
+        if(facets_by_ext[i] > 0) {
+            ext_index_map[i] = meshes.size();
+            TriangleMesh* mesh = new TriangleMesh;
+            meshes.push_back(mesh);
+            mesh->stl.stats.type = inmemory;
+            mesh->stl.stats.number_of_facets = facets_by_ext[i];
+            mesh->stl.stats.original_num_facets = facets_by_ext[i];
+            mesh->stl.stats.extruder_number = i;
+            stl_clear_error(&mesh->stl);
+            stl_allocate(&mesh->stl);
+        }
+
+        facets_by_ext[i] = 0;
+    }
+    int first = 0;
+    for(int idx = 0; idx < this->stl.stats.number_of_facets; idx++) {
+        facet = this->stl.facet_start[idx];
+        ext_num = (facet.extra[1] << 8) + facet.extra[0];
+        if (ext_num > 16) ext_num = 0;
+        meshes[ext_index_map[ext_num]]->stl.facet_start[facets_by_ext[ext_num]] = this->stl.facet_start[idx];
+        if (facets_by_ext[ext_num] > 0) {
+            first = 0;
+        } else {
+            first = 1;
+        }
+        stl_facet_stats(&meshes[ext_index_map[ext_num]]->stl, this->stl.facet_start[idx], first);
+        facets_by_ext[ext_num]++;
+    }
+
     return meshes;
 }
 

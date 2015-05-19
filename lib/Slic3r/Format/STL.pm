@@ -21,7 +21,19 @@ sub read_file {
     
     my $basename = basename($file);
     my $object = $model->add_object(input_file => $file, name => $basename);
-    my $volume = $object->add_volume(mesh => $mesh, name => $basename);
+
+    if ($mesh->extruders_count > 1) {
+        foreach my $new_mesh (@{$mesh->split_by_extruder}) {
+            $new_mesh->repair;
+            my $ext_num = $new_mesh->extruder_num;
+            my $volume = $object->add_volume(mesh => $new_mesh, name => $basename);
+            $volume->config->set('extruder', $ext_num + 1);
+        }
+
+    } else {
+        my $volume = $object->add_volume(mesh => $mesh, name => $basename);
+    }
+
     return $model;
 }
 

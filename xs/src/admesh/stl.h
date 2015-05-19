@@ -118,6 +118,8 @@ typedef struct {
   int           collisions;
   int           shared_vertices;
   int           shared_malloced;
+  int           number_of_extruders;
+  int           extruder_number;
 } stl_stats;
 
 typedef struct {
