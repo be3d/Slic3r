@@ -705,6 +705,11 @@ PrintConfigDef::build_def() {
     Options["seam_position"].enum_labels.push_back("Nearest");
     Options["seam_position"].enum_labels.push_back("Aligned");
 
+    Options["single_nozzle"].type = coBool;
+    Options["single_nozzle"].label = "Single nozzle";
+    Options["single_nozzle"].tooltip = "Indicated if printer has only one nozzle, but multiple extruders";
+    Options["single_nozzle"].cli = "single-nozzle!";
+
     Options["serial_port"].type = coString;
     Options["serial_port"].gui_type = "select_open";
     Options["serial_port"].label = "";

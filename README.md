@@ -128,6 +128,7 @@ The author of the Silk icon set is Mark James.
     
       Printer options:
         --nozzle-diameter   Diameter of nozzle in mm (default: 0.5)
+        --single-nozzle     Indicates that printer has more extruders but only one nozzle (default: no)
         --print-center      Coordinates in mm of the point to center the print around
                             (default: 100,100)
         --z-offset          Additional height in mm to add to vertical coordinates
@@ -382,3 +383,9 @@ If you want to change a preset file, just do
 If you want to slice a file overriding an option contained in your preset file:
 
     slic3r.pl --load config.ini --layer-height 0.25 file.stl
+
+Build in binary
+    pp -I "lib" -M Moo -o <output> slic3r.pl
+
+Change exe icon
+    perl -e "use Win32::Exe; $exe = Win32::Exe->new('slic3r.exe'); $exe->set_single_group_icon('slic3r_32.ico'); $exe->write;"

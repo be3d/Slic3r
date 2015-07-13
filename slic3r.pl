@@ -289,6 +289,7 @@ $j
   
   Printer options:
     --nozzle-diameter   Diameter of nozzle in mm (default: $config->{nozzle_diameter}->[0])
+    --single-nozzle     Indicates that printer has more extruders but only one nozzle (default: no)
     --print-center      Coordinates in mm of the point to center the print around
                         (default: 100,100)
     --z-offset          Additional height in mm to add to vertical coordinates
