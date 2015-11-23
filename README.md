@@ -385,7 +385,9 @@ If you want to slice a file overriding an option contained in your preset file:
     slic3r.pl --load config.ini --layer-height 0.25 file.stl
 
 Build in binary
+
     pp -I "lib" -M Moo -o <output> slic3r.pl
 
 Change exe icon
+
     perl -e "use Win32::Exe; $exe = Win32::Exe->new('slic3r.exe'); $exe->set_single_group_icon('slic3r_32.ico'); $exe->write;"
