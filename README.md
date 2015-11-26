@@ -386,7 +386,7 @@ If you want to slice a file overriding an option contained in your preset file:
 
 Build in binary
 
-    pp -I "lib" -M Moo -o <output> slic3r.pl
+    pp -I "lib" -M Moo -M Encode::Byte -o <output> slic3r.pl
 
 Change exe icon
 
